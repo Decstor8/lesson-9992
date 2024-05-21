@@ -7,16 +7,28 @@ import config from "../config";
 const usersRouter = Router();
 const client = new OAuth2Client(config.google.clientId);
 
+usersRouter.get('/', async (_req, res, next) => {
+    try {
+        const users = await User.find().select('-token');
+
+        return res.send(users);
+    } catch (err) {
+        return next();
+    }
+});
+
 usersRouter.post('/', async (req, res, next) => {
     try {
         const user = new User({
             email: req.body.email,
             password: req.body.password,
             displayName: req.body.displayName,
+            role: req.body.role,
         });
 
         user.generateToken();
         await user.save();
+
         return res.send({message: 'ok!', user});
     } catch (err) {
         if (err instanceof mongoose.Error.ValidationError) {

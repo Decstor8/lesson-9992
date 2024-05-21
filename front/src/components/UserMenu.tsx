@@ -2,8 +2,9 @@ import React, {useState} from 'react';
 import {UserTypes} from '../types';
 import {Button, Menu, MenuItem} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
-import {logout} from '../features/Users/usersThunks';
+import {getUsers, logout} from '../features/Users/usersThunks';
 import {useAppDispatch} from '../App/hooks';
+import {removeUser} from "../features/Users/getUsersSlice";
 
 interface Props {
     user: UserTypes;
@@ -25,6 +26,8 @@ const UserMenu: React.FC<Props> = ({user}) => {
 
     const handleLogout = () => {
         dispatch(logout());
+        dispatch(removeUser(user._id));
+        dispatch(getUsers());
         navigate('/login');
     };
 

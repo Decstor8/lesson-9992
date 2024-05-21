@@ -17,7 +17,6 @@ const Register = () => {
         email: '',
         password: '',
         displayName: '',
-        image: null,
     });
 
     const getFieldError = (fieldName: string) => {
@@ -38,8 +37,12 @@ const Register = () => {
     const submitFormHandler = async (e: FormEvent) => {
         e.preventDefault();
 
+        try {
             await dispatch(newUser(state)).unwrap();
             navigate('/');
+        } catch (err) {
+
+        }
     };
 
     return (

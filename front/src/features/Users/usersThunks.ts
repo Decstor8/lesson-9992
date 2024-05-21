@@ -1,5 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {GlobalError, LoginMutation, RegisterMutation, RegisterResponse, ValidationError} from '../../types';
+import {GlobalError, LoginMutation, RegisterMutation, RegisterResponse, UserTypes, ValidationError} from '../../types';
 import {isAxiosError} from 'axios';
 import {unsetUser} from './usersSlice';
 import axiosApi from "../../axiosApi";
@@ -54,9 +54,20 @@ export const googleLogin = createAsyncThunk<RegisterResponse, string, {rejectVal
 
 export const logout = createAsyncThunk<void, undefined>(
     'users/logout',
-    async (_, {dispatch},) => {
-
-        axiosApi.delete('users/sessions');
+    async (_, {dispatch}) => {
+        await axiosApi.delete('users/sessions');
         dispatch(unsetUser());
+    },
+);
+
+export const getUsers = createAsyncThunk<UserTypes[]>(
+    'getAll/users',
+    async () => {
+        try {
+            const response = await axiosApi.get<UserTypes[]>('/users');
+            return response.data;
+        } catch (err) {
+            throw err;
+        }
     },
 );

@@ -1,17 +1,19 @@
 import {combineReducers, configureStore} from '@reduxjs/toolkit';
-import {usersReducer} from '../features/Users/usersSlice';
+import {usersReducer} from '../features/Users/usersSlice.ts';
 import {persistReducer, FLUSH, PAUSE, PERSIST, REHYDRATE, PURGE, REGISTER, persistStore} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import {allUsersReducer} from '../features/Users/getUsersSlice.ts';
 
 const usersPersistConfig = {
     key: 'music:users',
     storage: storage,
     whitelist: ['user'],
-};
+}
 
 const rootReducer = combineReducers({
     users: persistReducer(usersPersistConfig, usersReducer),
-});
+    allUsers: allUsersReducer,
+})
 
 export const store = configureStore({
     reducer: rootReducer,
